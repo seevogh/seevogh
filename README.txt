@@ -36,9 +36,9 @@ Plugin will NOT work without proper API account on seevogh.com.
        Obtaining the source
        --------------------
 
- Zip file can be provided on demand - ask contact@evogh.com
+ Zip file can be provided on demand - ask contact@evogh.com, 
+or retrieved from https://github.com/seevogh/seevogh 
 
- //TODO: github? 
 
  
        Installation
