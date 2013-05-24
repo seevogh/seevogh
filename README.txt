@@ -39,6 +39,10 @@ Plugin will NOT work without proper API account on seevogh.com.
  Zip file can be provided on demand - ask contact@evogh.com, 
 or retrieved from https://github.com/seevogh/seevogh 
 
+ If you will download this file from github as a zip master archive 
+it will have a name seevogh-master.zip and when you unzip it, subdir will be 
+seevogh-master instead of seevogh. Please change subdirectory name to seevogh 
+as soon as you will unzip it in point 1. below. 
 
  
        Installation
@@ -56,6 +60,12 @@ These instructions assume your Moodle server is installed at /var/www/moodle.
  
         ./seevogh
         
+    Note: If you copied master zip file from github as explained above, please 
+    rename seevogh-master subdirectory to seevogh. You should have 
+    /var/www/moodle/mod/seevogh before doing update next step, otherwise 
+    installation will not work. 
+
+     
 3.  Login to your moodle site as administrator
 
         Moodle will detect the new module and prompt you to Upgrade.
