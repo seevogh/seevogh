@@ -69,6 +69,8 @@ function seevogh_add_instance(stdClass $seevogh, mod_seevogh_mod_form $mform = n
 
     global $DB;
 
+    //    struct Post { string id; string status; string jnlp; string err; string misc; };
+
     $seevogh->timecreated = time();
     $seevogh->welcome = 'welcome';
 
@@ -80,9 +82,10 @@ function seevogh_add_instance(stdClass $seevogh, mod_seevogh_mod_form $mform = n
 
 //////////// end seevogh API
 
-//    print $apiret;
+    //    print $apiret;
 
-//    print_r($apiret);
+    //    print_r($apiret);
+
 
 
     $seevogh->sv_meetingid = $apiret->id;
@@ -117,8 +120,8 @@ function seevogh_createMeeting($seevogh) {
 
   $client = new SOAPClient($api_url);
 
-  $res = $client->createMeeting($api_user,$api_passwd,$seevogh->sv_meetingname,$seevogh->sv_meetingpwd,$seevogh->sv_meetingaccesscode,$seevogh->sv_meetingquality,$seevogh->sv_meetingnpart,$seevogh->sv_meetingduration,$seevogh->sv_meetingoptrecord,$seevogh->sv_meetingopth323sip,$seevogh->sv_meetingoptphone);
 
+  $res = $client->createMeeting($api_user,$api_passwd,$seevogh->sv_meetingname,$seevogh->sv_meetingpwd,$seevogh->sv_meetingaccesscode,(int)$seevogh->sv_meetingquality,(int)$seevogh->sv_meetingnpart,(int)$seevogh->sv_meetingduration,(int)$seevogh->sv_meetingoptrecord,(int)$seevogh->sv_meetingopth323sip,(int)$seevogh->sv_meetingoptphone);
 
   return $res;
 
