@@ -1,7 +1,7 @@
 
 
-	seevogh Activity Module for Moodle 2.x
-	--------------------------------------
+	seevogh Activity Module for Moodle 2.4.x
+	----------------------------------------
 
  SeeVogh is cloud based videoconferencing solution that enables universities and 
 colleges to deliver a high-quality learning experience to remote students.
