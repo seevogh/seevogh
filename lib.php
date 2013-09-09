@@ -29,12 +29,11 @@
  * @copyright  2013 Evogh, Inc.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
+require_once($CFG->dirroot . '/calendar/lib.php');
 defined('MOODLE_INTERNAL') || die();
 
 /** example constant */
 //define('NEWMODULE_ULTIMATE_ANSWER', 42);
-
 ////////////////////////////////////////////////////////////////////////////////
 // Moodle core API                                                            //
 ////////////////////////////////////////////////////////////////////////////////
@@ -47,10 +46,34 @@ defined('MOODLE_INTERNAL') || die();
  * @return mixed true if the feature is supported, null if unknown
  */
 function seevogh_supports($feature) {
-    switch($feature) {
-        case FEATURE_MOD_INTRO:         return false;
-        default:                        return null;
+    switch ($feature) {
+        case FEATURE_MOD_INTRO: return false;
+        default: return null;
     }
+}
+
+/**
+ * Technical function, needed for REST calls.
+ *
+ */
+function do_post_request($url, $data, $optional_headers = null) {
+    $params = array('http' => array(
+            'method' => 'POST',
+            'content' => $data
+    ));
+    if ($optional_headers !== null) {
+        $params['http']['header'] = $optional_headers;
+    }
+    $ctx = stream_context_create($params);
+    $fp = @fopen($url, 'rb', false, $ctx);
+    if (!$fp) {
+        throw new Exception("Problem with $url, $php_errormsg");
+    }
+    $response = @stream_get_contents($fp);
+    if ($response === false) {
+        throw new Exception("Problem reading data from $url, $php_errormsg");
+    }
+    return $response;
 }
 
 /**
@@ -75,35 +98,32 @@ function seevogh_add_instance(stdClass $seevogh, mod_seevogh_mod_form $mform = n
     $seevogh->welcome = 'welcome';
 
     # You may have to add extra stuff in here #
-
 //////////// create seevogh meeting
 
     $apiret = seevogh_createMeeting($seevogh);
 
 //////////// end seevogh API
-
     //    print $apiret;
-
     //    print_r($apiret);
 
 
 
-    $seevogh->sv_meetingid = $apiret->id;
-    $seevogh->sv_meetingstatus = $apiret->status;
-    $seevogh->sv_meetingerror = $apiret->err;
-    $seevogh->sv_meetingjnlp = $apiret->jnlp;
+    $seevogh->sv_meetingid = $apiret->meetingId;
+    $seevogh->sv_meetingstatus = $apiret->meetingStatus;
+    $seevogh->sv_meetingerror = 0;
+    $seevogh->sv_meetingjnlp = '';
 
 
     $returnid = $DB->insert_record('seevogh', $seevogh);
 
 
     $event = new stdClass();
-    $event->name        = $seevogh->name;
-    $event->courseid    = $seevogh->course;
-    $event->groupid     = 0;
-    $event->userid      = 0;
-    $event->modulename  = 'seevogh';
-    $event->instance    = $returnid;
+    $event->name = $seevogh->name;
+    $event->courseid = $seevogh->course;
+    $event->groupid = 0;
+    $event->userid = 0;
+    $event->modulename = 'seevogh';
+    $event->instance = $returnid;
 
 
     calendar_event::create($event);
@@ -112,40 +132,49 @@ function seevogh_add_instance(stdClass $seevogh, mod_seevogh_mod_form $mform = n
 }
 
 function seevogh_createMeeting($seevogh) {
-  global $CFG;
+    global $CFG;
 
-  $api_url = $CFG->seevoghAPIURL;
-  $api_user = $CFG->seevoghAPIUsername;
-  $api_passwd = $CFG->seevoghAPIPassword;
+    //  $api_url = $CFG->seevoghAPIURL;
+    $api_user = $CFG->seevoghAPIUsername;
+    $api_passwd = $CFG->seevoghAPIPassword;
 
-  $client = new SOAPClient($api_url);
+    $api_url = 'https://seevogh.com/api/meeting/create';
+    //  $client = new SOAPClient($api_url);
+
+    $data_array = "apiLogin=$api_user&apiPassword=$api_passwd&meetingPwd=$seevogh->sv_meetingpwd&meetingName=$seevogh->sv_meetingname&meetingAccessCode=$seevogh->sv_meetingaccesscode&meetingType=$seevogh->sv_meetingtype&meetingDuration=$seevogh->sv_meetingduration&meetingNbrParticipants=$seevogh->sv_meetingnpart&optionRecording=$seevogh->sv_meetingoptrecord&optionH323sip=$seevogh->sv_meetingopth323sip&optionPhone=$seevogh->sv_meetingoptphone&meetingQuality=$seevogh->sv_meetingquality";
+
+    //  print $data_array;
+
+    $res = do_post_request($api_url, $data_array, null);
 
 
-  $res = $client->createMeeting($api_user,$api_passwd,$seevogh->sv_meetingname,$seevogh->sv_meetingpwd,$seevogh->sv_meetingaccesscode,(int)$seevogh->sv_meetingquality,(int)$seevogh->sv_meetingnpart,(int)$seevogh->sv_meetingduration,(int)$seevogh->sv_meetingoptrecord,(int)$seevogh->sv_meetingopth323sip,(int)$seevogh->sv_meetingoptphone);
+    $json = json_decode($res);
 
-  return $res;
 
+    //  $res = $client->createMeeting($api_user,$api_passwd,$seevogh->sv_meetingname,$seevogh->sv_meetingpwd,$seevogh->sv_meetingaccesscode,(int)$seevogh->sv_meetingquality,(int)$seevogh->sv_meetingnpart,(int)$seevogh->sv_meetingduration,(int)$seevogh->sv_meetingoptrecord,(int)$seevogh->sv_meetingopth323sip,(int)$seevogh->sv_meetingoptphone);
+    //  return $res;
+    return $json;
 }
-
-
 
 function seevogh_startMeeting($seevogh) {
-  global $CFG;
+    global $CFG;
 
-  $api_url = $CFG->seevoghAPIURL;
-  $api_user = $CFG->seevoghAPIUsername;
-  $api_passwd = $CFG->seevoghAPIPassword;
-
-
-  $client = new SOAPClient($api_url);
+    //  $api_url = $CFG->seevoghAPIURL;
+    $api_user = $CFG->seevoghAPIUsername;
+    $api_passwd = $CFG->seevoghAPIPassword;
 
 
-  $res = $client->startMeeting($api_user,$api_passwd,$seevogh->sv_meetingid,$seevogh->sv_meetingpwd);
+    $api_url = 'https://seevogh.com/api/meeting/start';
+    //  $client = new SOAPClient($api_url);
 
+    $data_array = "apiLogin=$api_user&apiPassword=$api_passwd&meetingId=$seevogh->sv_meetingid&meetingPwd=$seevogh->sv_meetingpwd";
 
-  return $res;
+    $res = do_post_request($api_url, $data_array, null);
+    $json = json_decode($res);
 
+    return $json;
 }
+
 /**
  * Updates an instance of the seevogh in the database
  *
@@ -181,7 +210,7 @@ function seevogh_update_instance(stdClass $seevogh, mod_seevogh_mod_form $mform 
 function seevogh_delete_instance($id) {
     global $DB;
 
-    if (! $seevogh = $DB->get_record('seevogh', array('id' => $id))) {
+    if (!$seevogh = $DB->get_record('seevogh', array('id' => $id))) {
         return false;
     }
 
@@ -220,6 +249,7 @@ function seevogh_user_outline($course, $user, $mod, $seevogh) {
  * @return void, is supposed to echp directly
  */
 function seevogh_user_complete($course, $user, $mod, $seevogh) {
+    
 }
 
 /**
@@ -249,7 +279,8 @@ function seevogh_print_recent_activity($course, $viewfullnames, $timestart) {
  * @param int $groupid check for a particular group's activity only, defaults to 0 (all groups)
  * @return void adds items into $activities and increases $index
  */
-function seevogh_get_recent_mod_activity(&$activities, &$index, $timestart, $courseid, $cmid, $userid=0, $groupid=0) {
+function seevogh_get_recent_mod_activity(&$activities, &$index, $timestart, $courseid, $cmid, $userid = 0, $groupid = 0) {
+    
 }
 
 /**
@@ -258,6 +289,7 @@ function seevogh_get_recent_mod_activity(&$activities, &$index, $timestart, $cou
  * @return void
  */
 function seevogh_print_recent_mod_activity($activity, $courseid, $detail, $modnames, $viewfullnames) {
+    
 }
 
 /**
@@ -267,8 +299,8 @@ function seevogh_print_recent_mod_activity($activity, $courseid, $detail, $modna
  *
  * @return boolean
  * @todo Finish documenting this function
- **/
-function seevogh_cron () {
+ * */
+function seevogh_cron() {
     return true;
 }
 
@@ -337,14 +369,14 @@ function seevogh_scale_used_anywhere($scaleid) {
  */
 function seevogh_grade_item_update(stdClass $seevogh) {
     global $CFG;
-    require_once($CFG->libdir.'/gradelib.php');
+    require_once($CFG->libdir . '/gradelib.php');
 
     /** @example */
     $item = array();
     $item['itemname'] = clean_param($seevogh->name, PARAM_NOTAGS);
     $item['gradetype'] = GRADE_TYPE_VALUE;
-    $item['grademax']  = $seevogh->grade;
-    $item['grademin']  = 0;
+    $item['grademax'] = $seevogh->grade;
+    $item['grademin'] = 0;
 
     grade_update('mod/seevogh', $seevogh->course, 'mod', 'seevogh', $seevogh->id, 0, null, $item);
 }
@@ -360,7 +392,7 @@ function seevogh_grade_item_update(stdClass $seevogh) {
  */
 function seevogh_update_grades(stdClass $seevogh, $userid = 0) {
     global $CFG, $DB;
-    require_once($CFG->libdir.'/gradelib.php');
+    require_once($CFG->libdir . '/gradelib.php');
 
     /** @example */
     $grades = array(); // populate array of grade objects indexed by userid
@@ -422,7 +454,7 @@ function seevogh_get_file_info($browser, $areas, $course, $cm, $context, $filear
  * @param bool $forcedownload whether or not force download
  * @param array $options additional options affecting the file serving
  */
-function seevogh_pluginfile($course, $cm, $context, $filearea, array $args, $forcedownload, array $options=array()) {
+function seevogh_pluginfile($course, $cm, $context, $filearea, array $args, $forcedownload, array $options = array()) {
     global $DB, $CFG;
 
     if ($context->contextlevel != CONTEXT_MODULE) {
@@ -449,6 +481,7 @@ function seevogh_pluginfile($course, $cm, $context, $filearea, array $args, $for
  * @param cm_info $cm
  */
 function seevogh_extend_navigation(navigation_node $navref, stdclass $course, stdclass $module, cm_info $cm) {
+    
 }
 
 /**
@@ -460,5 +493,6 @@ function seevogh_extend_navigation(navigation_node $navref, stdclass $course, st
  * @param settings_navigation $settingsnav {@link settings_navigation}
  * @param navigation_node $seevoghnode {@link navigation_node}
  */
-function seevogh_extend_settings_navigation(settings_navigation $settingsnav, navigation_node $seevoghnode=null) {
+function seevogh_extend_settings_navigation(settings_navigation $settingsnav, navigation_node $seevoghnode = null) {
+    
 }

@@ -161,5 +161,18 @@ function xmldb_seevogh_upgrade($oldversion) {
     // related, you'll raise the version and add one upgrade block here.
 
     // Final return of upgrade result (true, all went good) to Moodle.
+
+    if ($oldversion < 2013073001) {
+
+      $table = new xmldb_table('seevogh');
+
+      $table->add_field('sv_meetingtype', XMLDB_TYPE_INTEGER, '10', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, null);
+
+       
+      upgrade_mod_savepoint(true, 2013073001, 'seevogh');
+    }
+
+
+
     return true;
 }

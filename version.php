@@ -30,9 +30,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$module->version   = 2013052201;               // If version == 0 then module will not be installed
+$module->version   = 2013090901;               // If version == 0 then module will not be installed
 $module->requires  = 2010031900;      // Requires this Moodle version
 $module->cron      = 0;               // Period for cron to check this module (secs)
 $module->component = 'mod_seevogh'; // To check on upgrade, that module sits in correct place
-$module->maturity = MATURITY_ALPHA; // [MATURITY_STABLE | MATURITY_RC | MATURITY_BETA | MATURITY_ALPHA]
-$module->release  = '0.0.1';
+$module->maturity = MATURITY_BETA; // [MATURITY_STABLE | MATURITY_RC | MATURITY_BETA | MATURITY_ALPHA]
+$module->release  = '0.0.3';

@@ -1,0 +1,25 @@
+version 0.0.3 (September 9, 2013)
+
+        A teacher or admin can select when a meeting should start
+         - If anyone tries to join the meeting more then 5 mins before 
+           this time, they are presented with a message displaying the time 
+           the meeting will start.
+        A teacher can make the meeting start earlier/later by editing the 
+           SeeVogh form before the meeting is started.
+        The view.php page displays various info about the meeting
+	 - Anyone with permissions to create a meeting is given complete 
+           meeting info 
+         - Anyone who can only join a meeting is presented with just the jnlp 
+           link and the meeting access code
+
+
+version 0.0.2 (August 14, 2013)
+
+        First implementation based on REST interface. 
+ 	Ability to book different types of meetings was added.
+
+version 0.0.1 (May, 30, 2013)
+ 
+ 	Initial version with ability to book/start/join the meeting using 
+ 	SOAP Interface. 
+

@@ -24,8 +24,9 @@
         <FIELD NAME="timemodified" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="course" NEXT="sv_meetingname"/>
         <FIELD NAME="sv_meetingname" TYPE="char" LENGTH="256" NOTNULL="true" SEQUENCE="false" PREVIOUS="timemodified" NEXT="sv_meetingpwd"/>
         <FIELD NAME="sv_meetingpwd" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" PREVIOUS="sv_meetingname" NEXT="sv_meetingaccesscode"/>
-        <FIELD NAME="sv_meetingaccesscode" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" PREVIOUS="sv_meetingpwd" NEXT="sv_meetingquality"/>
-        <FIELD NAME="sv_meetingquality" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="sv_meetingaccesscode" NEXT="sv_meetingnpart"/>
+        <FIELD NAME="sv_meetingaccesscode" TYPE="char" LENGTH="100" NOTNULL="true" SEQUENCE="false" PREVIOUS="sv_meetingpwd" NEXT="sv_meetingtype"/>
+        <FIELD NAME="sv_meetingtype" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="sv_meetingaccesscode" NEXT="sv_meetingquality" />
+        <FIELD NAME="sv_meetingquality" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="sv_meetingtype" NEXT="sv_meetingnpart"/>
         <FIELD NAME="sv_meetingnpart" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="sv_meetingquality" NEXT="sv_meetingduration"/>
         <FIELD NAME="sv_meetingduration" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="sv_meetingnpart" NEXT="sv_meetingoptrecord"/>
         <FIELD NAME="sv_meetingoptrecord" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="sv_meetingduration" NEXT="sv_meetingopth323sip"/>
@@ -34,7 +35,8 @@
         <FIELD NAME="sv_meetingid" TYPE="char" LENGTH="20" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="sv_meetingoptphone" NEXT="sv_meetingjnlp"/>
         <FIELD NAME="sv_meetingjnlp" TYPE="char" LENGTH="256" NOTNULL="true" SEQUENCE="false" PREVIOUS="sv_meetingid" NEXT="sv_meetingerror"/>
         <FIELD NAME="sv_meetingerror" TYPE="char" LENGTH="20" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="sv_meetingjnlp" NEXT="sv_meetingstatus" />
-        <FIELD NAME="sv_meetingstatus" TYPE="char" LENGTH="100" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="sv_meetingerror" />
+        <FIELD NAME="sv_meetingstatus" TYPE="char" LENGTH="100" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="sv_meetingerror" NEXT="sv_meetingstarttime"/>
+        <FIELD NAME="sv_meetingstarttime" TYPE="char" LENGTH="20" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="sv_meetingstatus" />
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

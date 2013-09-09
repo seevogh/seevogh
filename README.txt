@@ -22,7 +22,7 @@ With this plugin you can
 
 You need:
 
-        - A server running Moodle 2.0+
+        - A server running Moodle 2.4+
 	- USHI account on seevogh.com (please ask contact@evogh.com)
         - API account on seevogh.com linked to your USHI account 
           (please ask contact@evogh.com)

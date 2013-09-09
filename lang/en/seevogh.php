@@ -30,6 +30,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+
+
 $string['modulename'] = 'seevogh';
 $string['modulenameplural'] = 'seevogh';
 $string['modulename_help'] = 'Use the seevogh module for booking the SeeVogh meeting | The seevogh module allows book SeeVogh Hybrid Cloud meeting and participate in it';
@@ -43,23 +45,40 @@ $string['seevoghmeetingset'] = 'SeeVogh Meeting parameters';
 $string['seevoghname'] = 'SeeVogh Meeting Name';
 $string['seevoghpwd'] = 'SeeVogh Meeting Moderator Key';
 $string['seevoghaccesscode'] = 'SeeVogh Meeting Access Code';
-$string['seevoghquality'] = 'SeeVogh Meeting Quality [1-lowest 5-highest]';
+$string['seevoghquality'] = 'SeeVogh Meeting Quality (Lowest) 1 - 5 (Highest)';
 $string['seevoghnpart'] = 'SeeVogh Meeting Number of Participants';
-$string['seevoghduration'] = 'SeeVogh Meeting Duration';
+$string['seevoghduration'] = 'SeeVogh Meeting Duration [Hours]';
 $string['seevoghoptrecord'] = 'SeeVogh Meeting Recording Option';
 $string['seevoghopth323sip'] = 'SeeVogh Meeting H323/SIP Option';
 $string['seevoghoptphone'] = 'SeeVogh Meeting Phone Option';
+$string['seevoghmtype'] = 'SeeVogh Meeting Type';
+$string['seevoghstarttime'] = 'SeeVogh Meeting Start Time';
 
-$string['seevoghname_help'] = 'This is SeeVogh Meeting Name';
-$string['seevoghpwd_help'] = 'This is SeeVogh Meeting Moderator Key. It is mandatory parameter.';
-$string['seevoghaccesscode_help'] = 'This is SeeVogh Meeting Access Code for the users to join the meeting. If this password set, user will be prompted for this passsword when he/she will try to join the meeting';
-$string['seevoghquality_help'] = 'This is SeeVogh Meeting Quality. Lowest level is 1, Highest (1080p HD) - 5. We are recommending to set it at 3 (640x380).';
-$string['seevoghnpart_help'] = 'This is SeeVogh Meeting number of participants. It should not be more than 50. Default value - 5. Please see http://seevogh.com configurator for details.';
-$string['seevoghduration_help'] = 'This is SeeVogh Meeting duraiton in hours. Should be integer, default is 1 (hour).';
-$string['seevoghoptrecord_help'] = 'This is SeeVogh Meeting Recording option. By default it is enabled for all joined from dashboard. Set to 0 to disable it.';
-$string['seevoghopth323sip_help'] = 'This is SeeVogh Meeting H323/SIP option. By default it is enabled. Set to 0 to disable it.';
-$string['seevoghoptphone_help'] = 'This is SeeVogh Meeting Phone option. By default it is enabled. Set to 0 to disable it.';
+$string['seevoghname_help'] = 'This is the SeeVogh Meeting Name.';
+$string['seevoghpwd_help'] = 'This is the SeeVogh Meeting Moderator Key. It is a mandatory parameter to create a meeting.';
+$string['seevoghaccesscode_help'] = 'This is SeeVogh Meeting Access Code for the users to join the meeting. If a code put into this field, users will be prompted for this code when they try to join the meeting';
+$string['seevoghquality_help'] = 'This is the desired quality of the SeeVogh meeting.The lowest level is 1 and the highest level (1080p HD) is 5. We are recommending to set it at 3 (640x380).';
+$string['seevoghnpart_help'] = 'This is the desired number of participants for the SeeVogh meeting. It should not be more than 50. Default value - 5. Please see http://seevogh.com configurator for details.';
+$string['seevoghduration_help'] = 'This is the SeeVogh Meeting duraiton (in hours). This should be a whole, integer value. The default is 1 (hour).';
+$string['seevoghoptrecord_help'] = 'This enables or disables the option to record a SeeVogh meeting. By default it is enabled for all joined from the dashboard. Set this value to No to disable it.';
+$string['seevoghopth323sip_help'] = 'This is the SeeVogh Meeting H323/SIP option. By default it is enabled. Set this value to No to disable it.';
+$string['seevoghoptphone_help'] = 'This is SeeVogh Meeting Phone option. By default it is enabled. Set this value to No to disable it.';
+$string['seevoghmtype_help'] = 'This is The type of the SeeVogh Meeting. Select either a plenary or regular meeting. ';
+
+$string['seevoghstarttime_help'] = 'This is the desired start time of the SeeVogh meeting. The meeting will be eligible to start five minutes before this time.';
 
 $string['seevogh'] = 'seevogh';
 $string['pluginadministration'] = 'seevogh administration';
 $string['pluginname'] = 'seevogh';
+
+#Strings for radio button text
+$string['one'] = '1';
+$string['two'] = '2';
+$string['three'] = '3';
+$string['four'] = '4';
+$string['five'] = '5';
+$string['plenary'] = "Plenary";
+$string['regular'] = "Regular";
+
+#Error strings
+$string['seevoghstarttime_error'] = "Please select a meeting time that is either the present time or in the future. ";
