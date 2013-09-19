@@ -118,10 +118,12 @@ class mod_seevogh_mod_form extends moodleform_mod {
         $mform->setDefault('sv_meetingnpart', 5);
 
 //
-// Adding meeting type (default = 0, 0-regular type, 1-plenary)
+// Adding meeting type (default = 0, 0-regular type, 1-broadcast, 2-plenary 3-classroom(not operational yet) )
 //
         $mtypeArray = array();
-        $mtypeArray[] = & $mform->createElement('radio', 'sv_meetingtype', '', get_string('plenary', 'seevogh'), 1);
+	//        $mtypeArray[] = & $mform->createElement('radio', 'sv_meetingtype', '', get_string('classroom', 'seevogh'), 3);
+        $mtypeArray[] = & $mform->createElement('radio', 'sv_meetingtype', '', get_string('plenary', 'seevogh'), 2);
+        $mtypeArray[] = & $mform->createElement('radio', 'sv_meetingtype', '', get_string('broadcast', 'seevogh'), 1);
         $mtypeArray[] = & $mform->createElement('radio', 'sv_meetingtype', '', get_string('regular', 'seevogh'), 0);
         $mform->setDefault('sv_meetingtype', 0);
         $mform->addGroup($mtypeArray, 'sv_meetingtype', get_string('seevoghmtype', 'seevogh'), array(' '), false);

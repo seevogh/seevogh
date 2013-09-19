@@ -90,7 +90,7 @@ activity link to the class.
 	 ----------
 
 If you have feedback, enhancement requests, or would like commercial support for 
-hosting, integrating, customizing, branding, or scaling BigBlueButton, contact us at
+hosting, integrating, customizing, branding, or scaling SeeVogh, contact us at
 contact@evogh.com
 
 

@@ -231,8 +231,12 @@ function print_extra_meeting_info($seevogh, $context) {
         print "<h2><center>Meeting duration: $seevogh->sv_meetingduration hour(s)</h2></center>";
         print "<h2><center>Number of meeting participants: $seevogh->sv_meetingnpart</h2></center>";
         if ($seevogh->sv_meetingtype == 1)
+            $output = "Broadcast";
+        elseif ($seevogh->sv_meetingtype == 2)
             $output = "Plenary";
-        else
+	elseif ($seevogh->sv_meetingtype == 3)
+            $output = "Classroom";
+	else    
             $output = "Regular";
         print "<h2><center>Meeting Type: $output</h2></center>";
 
