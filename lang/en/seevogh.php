@@ -32,9 +32,9 @@ defined('MOODLE_INTERNAL') || die();
 
 
 
-$string['modulename'] = 'seevogh';
-$string['modulenameplural'] = 'seevogh';
-$string['modulename_help'] = 'Use the seevogh module for booking the SeeVogh meeting | The seevogh module allows book SeeVogh Hybrid Cloud meeting and participate in it';
+$string['modulename'] = 'SeeVogh';
+$string['modulenameplural'] = 'SeeVogh';
+$string['modulename_help'] = 'Use the SeeVogh module for booking the SeeVogh meeting | The seevogh module allows book SeeVogh Hybrid Cloud meeting and participate in it';
 $string['seevoghfieldset'] = 'Custom example fieldset';
 $string['seevoghurl'] = "https://seevogh.com/?/svws/?wsdl";
 $string['seevoghUrl'] = "https://seevogh.com/?/svws/?wsdl";
@@ -63,13 +63,13 @@ $string['seevoghduration_help'] = 'This is the SeeVogh Meeting duraiton (in hour
 $string['seevoghoptrecord_help'] = 'This enables or disables the option to record a SeeVogh meeting. By default it is enabled for all joined from the dashboard. Set this value to No to disable it.';
 $string['seevoghopth323sip_help'] = 'This is the SeeVogh Meeting H323/SIP option. By default it is enabled. Set this value to No to disable it.';
 $string['seevoghoptphone_help'] = 'This is SeeVogh Meeting Phone option. By default it is enabled. Set this value to No to disable it.';
-$string['seevoghmtype_help'] = 'This is The type of the SeeVogh Meeting. Select either a plenary or regular meeting. ';
+$string['seevoghmtype_help'] = 'This is The type of the SeeVogh Meeting. Select one of the types. ';
 
 $string['seevoghstarttime_help'] = 'This is the desired start time of the SeeVogh meeting. The meeting will be eligible to start five minutes before this time.';
 
 $string['seevogh'] = 'seevogh';
-$string['pluginadministration'] = 'seevogh administration';
-$string['pluginname'] = 'seevogh';
+$string['pluginadministration'] = 'SeeVogh administration';
+$string['pluginname'] = 'SeeVogh';
 
 #Strings for radio button text
 $string['one'] = '1';
@@ -77,8 +77,14 @@ $string['two'] = '2';
 $string['three'] = '3';
 $string['four'] = '4';
 $string['five'] = '5';
+$string['classroom'] = "Classroom";
+$string['broadcast'] = "Broadcast";
 $string['plenary'] = "Plenary";
 $string['regular'] = "Regular";
 
 #Error strings
 $string['seevoghstarttime_error'] = "Please select a meeting time that is either the present time or in the future. ";
+
+$string['seevogh:addinstance'] = 'Add a new meeting';
+$string['seevogh:join'] = 'Join a meeting';
+$string['seevogh:moderate'] = 'Moderate a meeting';
