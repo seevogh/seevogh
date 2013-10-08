@@ -1,3 +1,13 @@
+version 0.1.0 (October 2, 2013)
+
+	- new output web page view, better design 
+	- notification when meeting is over and user cannot join it anymore.
+
+version 0.0.5 (September 20, 2013)
+
+	- mobile devices links were added
+        - messages were improved
+
 version 0.0.4 (September 19, 2013)
 	
 	- new SeeVogh Logo, change in plugin name. 

@@ -84,6 +84,7 @@ $seevoghsession['sv_meetingopth323sip'] = $seevogh->sv_meetingopth323sip;
 $seevoghsession['sv_meetingoptphone'] = $seevogh->sv_meetingoptphone;
 $seevoghsession['sv_meetingid'] = $seevogh->sv_meetingid;
 $seevoghsession['sv_meetingjnlp'] = $seevogh->sv_meetingjnlp;
+$seevoghsession['sv_meetingmobile'] = $seevogh->sv_meetingmobile;
 $seevoghsession['sv_meetingerror'] = $seevogh->sv_meetingerror;
 $seevoghsession['sv_meetingstatus'] = $seevogh->sv_meetingstatus;
 //User data
@@ -113,8 +114,23 @@ if (!has_capability('mod/seevogh:join', $context)) {
     exit;
 }
 
+if ($seevogh->sv_meetingstatus != 'over') {
+  // Check the meeting status
+  $startret = seevogh_getMeetingStatus($seevogh);
+  //print "<center>Meeting status after start: $startret->meetingStatus </center>";  
+  //print "<center>Meeting jnlp: $startret->jnlp </center>";  
+  //print "<center>Meeting Error: $startret->err </center>";  
+  //$meetingjnlp = $startret->meetingJnlp;
+  $seevogh->sv_meetingstatus = $startret->meetingStatus;
+  $seevoghsession['sv_meetingstatus'] = $startret->meetingStatus;
+  $returnid = $DB->update_record('seevogh', $seevogh);
+ }
+
+
 $PAGE->set_title($seevogh->name);
-$PAGE->set_button(update_module_button($cm->id, $course->id, get_string('modulename', 'seevogh')));
+if ($seevogh->sv_meetingstatus != 'over') {
+  $PAGE->set_button(update_module_button($cm->id, $course->id, get_string('modulename', 'seevogh')));
+ }
 $PAGE->set_cacheable(false);
 
 
@@ -130,19 +146,88 @@ $seevoghsession['sv_meetingstatus'] = $seevogh->sv_meetingstatus;
 //print "<center>Meeting PWD: $seevogh->sv_meetingpwd </center>";
 //print "<center>Meeting status: $seevogh->sv_meetingstatus </center>";
 
+// Add css style
+
+print "<style type=\"text/css\"> ";
+print "a.bigblue:link {color:#2DA0FE; text-decoration:none; font-size:2.5em; font-weight:bold;}";
+print "a.bigblue:visited {color:#2DA0FE; text-decoration:none; font-size:2.5em; font-weight:bold;}";
+print "a.bigblue:hover {color:#2DA0FE; text-decoration:underline; font-size:2.5em; font-weight:bold;}";
+print "a.bigblue:active {color:#FF7070; text-decoration:underline; font-size:2.5em; font-weight:bold;}";
+print "a.blue:link {color:#2DA0FE; text-decoration:none; font-weight:bold;}";
+print "a.blue:visited {color:#2DA0FE; text-decoration:none; font-weight:bold;}";
+print "a.blue:hover {color:#2DA0FE; text-decoration:underline; font-weight:bold;}";
+print "a.blue:active {color:#FF7070; text-decoration:underline; font-weight:bold;}";
+print "</style>";
+
+
+
+if ($seevogh->sv_meetingstatus == 'over') {
+        print "<h1><center>This meeting is over. </center></h1>";
+	print "<center>";
+	print_extra_meeting_info($seevogh, $context);
+	print "</center>";
+
+	if (!has_capability('mod/seevogh:moderate', $context)) {
+	  echo "<center>";
+	  echo "<table bgcolor=\"#000000\" cellpading=\"6px\" cellspacing=\"2px\" border=\"0\">\n";
+	  echo "<tr height=\"80px\"><td align=\"center\" valign=\"middle\" colspan=\"2\"><img src=\"https://seevogh.com/wp-content/themes/seevogh/images/logo.jpg\" width=\"257px\" height=\"52px\">\n";
+	  echo "<tr><td><font color=\"#ffffff\">Meeting Name: </font><font color=\"#00ff00\"><strong>$seevogh->sv_meetingname</strong></font></td><td></td></tr>\n";
+	  echo "<tr><td><font color=\"#ffffff\">Status: </font><font color=\"#00ff00\"><strong>$seevogh->sv_meetingstatus</strong></font></td><td><font color=\"#ffffff\">Access Code: <strong>$seevogh->sv_meetingaccesscode</strong></font></td></tr>\n";
+	  echo "</table>\n";
+	  echo "</center>";
+	}
+	
+ }
+
 
 if ($seevogh->sv_meetingstatus == 'running') {
 
+
+
     $meetingjnlp = $seevogh->sv_meetingjnlp;
+    $meetingmobile = $seevogh->sv_meetingmobile;
 
     //  print "<center>Meeting (running) jnlp: $meetingjnlp </center>";  
 // echo "<script type=\"text/javascript\" language=\"javascript\"> 
 //window.open(\"$meetingjnlp\"); </script>"; 
 
-    echo "<h1><u><center><a href=\"$meetingjnlp\">Click Here to Join the meeting</h1></u></center></a>";
-    print "<h1><center>The link will download a .jnlp file to your computer. Double click this file to launch the SeeVogh application.</h1></center>";
-    print "<br>";
+//    echo "<h1><u><center><a href=\"$meetingjnlp\">Click Here to Join the meeting on PC/laptop</h1></u></center></a>";
+//    print "<h1><center>The link will download a .jnlp file to your computer. Double click this file to launch the SeeVogh application on Mac.</h1></center>";
+//    print "<br>";
+//    echo "<h1><u><center><a href=\"$meetingmobile\">Click Here to Join the meeting on Tablet/Smartphone</h1></u></center></a>";
+
+    echo "\n";
+    echo "<center>\n";
+    echo "<p><br/></p><p>\n";
+    echo "<table border=0>\n";
+    echo "<tr><td>\n";
+    echo "<script type=\"text/javascript\">\n";
+
+    echo "if (navigator.userAgent.match(/(iPad|iPhone|iPod|android)/i)) {\n";
+    echo "  document.write(\"<a class='bigblue' href='$meetingmobile'><img border='0' src='https://seevogh.com/wp-content/themes/seevogh/images/right_arrow.png' width='40px' height='28px'> Join the SeeVogh meeting</a><br>\");\n";
+    echo "  document.write(\"<font color='#808080'><i>The SeeVogh Mobile App must be installed on your mobile device.<br>\");\n";
+    echo " if (navigator.userAgent.match(/(iPad|iPhone|iPod)/i)) {\n";
+    echo "   document.write(\"<font color='#808080'><i>The SeeVogh Mobile App must be installed on your iOS device.<br>\");\n";
+    echo "   document.write(\"<a target='new' class='blue' href='https://itunes.apple.com/us/app/seevogh/id627519081?mt=8'>Download</a> from the App Store.</font><br>\");\n";
+    echo " } else { \n";
+    echo "   document.write(\"<font color='#808080'><i>The SeeVogh Mobile App must be installed on your Android device.<br>\");\n";
+    echo "   document.write(\"<a target='new'  class='blue' href='https://play.google.com/store/apps/details?id=com.seevogh'>Download</a> from the Google Play store.</font><br>\");\n";
+    echo " } \n";
+    echo " } else { \n";
+    echo "  document.write(\"<a class='bigblue' href='$meetingjnlp'><img border='0' src='https://seevogh.com/wp-content/themes/seevogh/images/right_arrow.png'  width='40px' height='28px'> Join the SeeVogh meeting</a><br>\"); \n";
+    echo "  document.write(\"<font color='#808080'>The link will download a .jnlp file to your computer.<br>\");\n";
+    echo "  if (navigator.userAgent.match(/Mac/i)) { \n";
+    echo "    document.write(\"Double click this file to launch the SeeVogh application on Mac.<br>\");\n";
+    echo "   } \n";
+    echo "} \n";
+
+    echo "</script>\n";
+    echo "</td></tr>\n";
+    echo "</table>\n";
+
+
     #Generates information that is relevant to a user scheduling a meeting 
+    print "<br>";
     print_extra_meeting_info($seevogh, $context);
 }
 
@@ -162,12 +247,16 @@ if ($seevogh->sv_meetingstatus == 'ready') {
 
         $meetingjnlp = $startret->meetingJnlp;
 
+	$meetingmobile = seevogh_getMobileURL($seevogh);
+
         $seevogh->sv_meetingstatus = $startret->meetingStatus;
         $seevogh->sv_meetingjnlp = $startret->meetingJnlp;
+        $seevogh->sv_meetingmobile = $meetingmobile;
         $seevogh->sv_meetingerror = 0;
 
         $seevoghsession['sv_meetingstatus'] = $startret->meetingStatus;
         $seevoghsession['sv_meetingjnlp'] = $startret->meetingJnlp;
+        $seevoghsession['sv_meetingmobile'] = $meetingmobile;
         $seevoghsession['sv_meetingerror'] = 0;
 
         $returnid = $DB->update_record('seevogh', $seevogh);
@@ -177,8 +266,35 @@ if ($seevogh->sv_meetingstatus == 'ready') {
 // echo "<script type=\"text/javascript\" language=\"javascript\"> 
 //window.open(\"$meetingjnlp\"); </script>"; 
 
-        echo "<h1><u><center><a href=\"$meetingjnlp\">Click Here to Join the meeting</a></h1></u></center>";
-        print "<h1><center>The link will download a .jnlp file to your computer. Double click this file to launch the SeeVogh application.</h1></center>";
+    echo "\n";
+    echo "<center>\n";
+    echo "<p><br/></p><p>\n";
+    echo "<table border=0>\n";
+    echo "<tr><td>\n";
+    echo "<script type=\"text/javascript\">\n";
+
+    echo "if (navigator.userAgent.match(/(iPad|iPhone|iPod|android)/i)) {\n";
+    echo "  document.write(\"<a class='bigblue' href='$meetingmobile'><img border='0' src='https://seevogh.com/wp-content/themes/seevogh/images/right_arrow.png' width='40px' height='28px'> Join the SeeVogh meeting</a><br>\");\n";
+    echo "  document.write(\"<font color='#808080'><i>The SeeVogh Mobile App must be installed on your mobile device.<br>\");\n";
+    echo " if (navigator.userAgent.match(/(iPad|iPhone|iPod)/i)) {\n";
+    echo "   document.write(\"<font color='#808080'><i>The SeeVogh Mobile App must be installed on your iOS device.<br>\");\n";
+    echo "   document.write(\"<a target='new' class='blue' href='https://itunes.apple.com/us/app/seevogh/id627519081?mt=8'>Download</a> from the App Store.</font><br>\");\n";
+    echo " } else { \n";
+    echo "   document.write(\"<font color='#808080'><i>The SeeVogh Mobile App must be installed on your Android device.<br>\");\n";
+    echo "   document.write(\"<a target='new'  class='blue' href='https://play.google.com/store/apps/details?id=com.seevogh'>Download</a> from the Google Play store.</font><br>\");\n";
+    echo " } \n";
+    echo " } else { \n";
+    echo "  document.write(\"<a class='bigblue' href='$meetingjnlp'><img border='0' src='https://seevogh.com/wp-content/themes/seevogh/images/right_arrow.png'  width='40px' height='28px'> Join the SeeVogh meeting</a><br>\"); \n";
+    echo "  document.write(\"<font color='#808080'>The link will download a .jnlp file to your computer.<br>\");\n";
+    echo "  if (navigator.userAgent.match(/Mac/i)) { \n";
+    echo "    document.write(\"Double click this file to launch the SeeVogh application on Mac.<br>\");\n";
+    echo "   } \n";
+    echo "} \n";
+
+    echo "</script>\n";
+    echo "</td></tr>\n";
+    echo "</table>\n";
+
     } else {
         print "<h1><center>The meeting has not yet begun. It is scheduled to begin at  " . date("h:i:s", $seevogh->sv_meetingstarttime) . ".</center></h1>";
         if (has_capability('mod/seevogh:moderate', $context)) {
@@ -189,8 +305,15 @@ if ($seevogh->sv_meetingstatus == 'ready') {
 }
 
 #Print the meeting access code for a student to join the meeting.
-if (!has_capability('mod/seevogh:moderate', $context)) {
-    print "<h2><center>Meeting access code: $seevogh->sv_meetingaccesscode</h2></center>";
+if ($seevogh->sv_meetingstatus == 'ready' || $seevogh->sv_meetingstatus == 'running') {
+  if (!has_capability('mod/seevogh:moderate', $context)) {
+
+    echo "<table bgcolor=\"#000000\" cellpading=\"6px\" cellspacing=\"2px\" border=\"0\">\n";
+    echo "<tr height=\"80px\"><td align=\"center\" valign=\"middle\" colspan=\"2\"><img src=\"https://seevogh.com/wp-content/themes/seevogh/images/logo.jpg\" width=\"257px\" height=\"52px\">\n";
+    echo "<tr><td><font color=\"#ffffff\">Meeting Name: </font><font color=\"#00ff00\"><strong>$seevogh->sv_meetingname</strong></font></td><td></td></tr>\n";
+    echo "<tr><td><font color=\"#ffffff\">Status: </font><font color=\"#00ff00\"><strong>$seevogh->sv_meetingstatus</strong></font></td><td><font color=\"#ffffff\">Access Code: <strong>$seevogh->sv_meetingaccesscode</strong></font></td></tr>\n";
+    echo "</table>\n";
+  }
 }
 
 // Replace the following lines with you own code
@@ -224,33 +347,49 @@ function print_extra_meeting_info($seevogh, $context) {
     //Print extra information if the user is able to create a SeeVogh instance
     if (has_capability('mod/seevogh:addinstance', $context)) {
 
-        print "<h2><center>Meeting quality [1-5]: $seevogh->sv_meetingquality</h2></center>";
-        print "<h2><center>Meeting status: $seevogh->sv_meetingstatus</h2></center>";
-        print "<h2><center>Meeting access code: $seevogh->sv_meetingaccesscode</h2></center>";
-        print "<h2><center>Meeting moderator key: $seevogh->sv_meetingpwd</h2></center>";
-        print "<h2><center>Meeting duration: $seevogh->sv_meetingduration hour(s)</h2></center>";
-        print "<h2><center>Number of meeting participants: $seevogh->sv_meetingnpart</h2></center>";
-        if ($seevogh->sv_meetingtype == 1)
-            $output = "Broadcast";
-        elseif ($seevogh->sv_meetingtype == 2)
-            $output = "Plenary";
-	elseif ($seevogh->sv_meetingtype == 3)
-            $output = "Classroom";
-	else    
-            $output = "Regular";
-        print "<h2><center>Meeting Type: $output</h2></center>";
 
-        if ($seevogh->sv_meetingoptrecord == 1)
-            $output = "yes";
-        else
-            $output = "no";
-        print "<h2><center>Can this SeeVogh meeting be recorded?: $output</h2></center>";
-        if ($seevogh->sv_meetingoptphone == 1)
-            $output = "yes";
-        else
-            $output = "no";
-        print "<h2><center>Is the phone option enabled for this meeting? $output</h2></center>";
-        print "<h1><center>**Once a SeeVogh meeting has already been started, options about the meeting cannot be changed. 
-    The SeeVogh activity will have to be deleted and remade with the updated information.**</h1></center>";
+    // Make a table 
+
+      if ($seevogh->sv_meetingtype == 1)
+	$output = "Broadcast";
+      elseif ($seevogh->sv_meetingtype == 2)
+	$output = "Plenary";
+      elseif ($seevogh->sv_meetingtype == 3)
+	$output = "Classroom";
+      else    
+	$output = "Open Table";
+
+      if ($seevogh->sv_meetingoptrecord == 1)
+	$rec_output = "yes";
+      else
+	$rec_output = "no";
+
+      if ($seevogh->sv_meetingoptphone == 1)
+	$ph_output = "yes";
+      else
+	$ph_output = "no";
+
+      if ($seevogh->sv_meetingopth323sip != 0)
+	$h323_output = "yes";
+      else
+	$$h323_output = "no";
+  
+ 
+      
+    echo "<table bgcolor=\"#000000\" cellpading=\"6px\" cellspacing=\"2px\" border=\"0\">\n";
+    echo "<tr height=\"80px\"><td align=\"center\" valign=\"middle\" colspan=\"2\"><img src=\"https://seevogh.com/wp-content/themes/seevogh/images/logo.jpg\" width=\"257px\" height=\"52px\">\n";
+    echo "<tr><td><font color=\"#ffffff\">Meeting Name: </font><font color=\"#00ff00\"><strong>$seevogh->sv_meetingname</strong></font></td><td></td></tr>\n";
+    echo "<tr><td><font color=\"#ffffff\">Status: </font><font color=\"#00ff00\"><strong>$seevogh->sv_meetingstatus</strong></font></td><td><font color=\"#ffffff\">Access Code: <strong>$seevogh->sv_meetingaccesscode</strong></font></td></tr>\n";
+    echo "<tr><td></td><td><font color=\"#ffffff\">Moderator Key: <strong>$seevogh->sv_meetingpwd</strong></font></td></tr>\n";
+    echo "<tr><td><font color=\"#ffffff\">Meeting Type: </font><font color=\"#2DA0FE\"><strong>$output</strong></font></td><td><font color=\"#ffffff\">Duration: <strong>$seevogh->sv_meetingduration</strong> hour(s)</font></td></tr>\n";
+    echo "<tr><td><font color=\"#ffffff\">Quality</font><font color=\"#a0a0a0\"> [1-5]</font><font color=\"#ffffff\">: <strong>$seevogh->sv_meetingquality</strong></font></td><td><font color=\"#ffffff\">Number of participants: <strong>$seevogh->sv_meetingnpart</strong></font></td></tr>\n";
+    echo "<tr><td><font color=\"#ffffff\">Recording: </font><font color=\"#00ff00\"><strong>$rec_output</strong></font></td>\n";
+    //    echo "<td><font color=\"#ffffff\">Phone Option:</font><font color=\"#00ff00\"><strong>$ph_output</strong></font></td></tr>\n";
+    echo "<td><font color=\"#ffffff\">H323/SIP: </font><font color=\"#00ff00\"><strong>$h323_output</strong></font></td></tr>\n";
+    echo "</table>\n";
+
+
+    print "<font color=\"#808080\">Once a SeeVogh meeting has already been started, options about the meeting cannot be changed. <br>
+    The SeeVogh activity will have to be deleted and remade with the updated information.</font>\n";
     }
 }

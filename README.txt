@@ -24,8 +24,13 @@ You need:
 
         - A server running Moodle 2.4+
 	- USHI account on seevogh.com (please ask contact@evogh.com)
+          This is not necessary in the beginning and we can use one of our 
+          moodle test USHI accounts, but if you intend to use moodle plugin
+          in production environment, you need to get the USHI account.
         - API account on seevogh.com linked to your USHI account 
           (please ask contact@evogh.com)
+	- You will need to provide us (contact@evogh.com) the IP address
+          of the webserver with moodle which you will use for this plugin.
 
 For information how to setup USHI account, USHI server (if needed) and 
 obtain API account please consult contact@evogh.com

@@ -143,18 +143,30 @@ function seevogh_createMeeting($seevogh) {
 
     $data_array = "apiLogin=$api_user&apiPassword=$api_passwd&meetingPwd=$seevogh->sv_meetingpwd&meetingName=$seevogh->sv_meetingname&meetingAccessCode=$seevogh->sv_meetingaccesscode&meetingType=$seevogh->sv_meetingtype&meetingDuration=$seevogh->sv_meetingduration&meetingNbrParticipants=$seevogh->sv_meetingnpart&optionRecording=$seevogh->sv_meetingoptrecord&optionH323sip=$seevogh->sv_meetingopth323sip&optionPhone=$seevogh->sv_meetingoptphone&meetingQuality=$seevogh->sv_meetingquality";
 
-    //  print $data_array;
+    //    print $data_array;
 
     $res = do_post_request($api_url, $data_array, null);
 
 
     $json = json_decode($res);
 
+    //print_r($json);
 
     //  $res = $client->createMeeting($api_user,$api_passwd,$seevogh->sv_meetingname,$seevogh->sv_meetingpwd,$seevogh->sv_meetingaccesscode,(int)$seevogh->sv_meetingquality,(int)$seevogh->sv_meetingnpart,(int)$seevogh->sv_meetingduration,(int)$seevogh->sv_meetingoptrecord,(int)$seevogh->sv_meetingopth323sip,(int)$seevogh->sv_meetingoptphone);
     //  return $res;
     return $json;
 }
+
+function seevogh_getMobileURL($seevogh) {
+
+  $url="https://seevogh.com/?joinMobile=$seevogh->sv_meetingid";
+
+  $res=file_get_contents($url);
+
+  return $res;
+
+}
+
 
 function seevogh_startMeeting($seevogh) {
     global $CFG;
@@ -166,6 +178,28 @@ function seevogh_startMeeting($seevogh) {
 
     $api_url = 'https://seevogh.com/api/meeting/start';
     //  $client = new SOAPClient($api_url);
+
+    $data_array = "apiLogin=$api_user&apiPassword=$api_passwd&meetingId=$seevogh->sv_meetingid&meetingPwd=$seevogh->sv_meetingpwd";
+
+    $res = do_post_request($api_url, $data_array, null);
+    $json = json_decode($res);
+
+    return $json;
+}
+
+
+
+function seevogh_getMeetingStatus($seevogh) {
+    global $CFG;
+
+    //  $api_url = $CFG->seevoghAPIURL;
+    $api_user = $CFG->seevoghAPIUsername;
+    $api_passwd = $CFG->seevoghAPIPassword;
+
+
+    $api_url = 'https://seevogh.com/api/meeting/status';
+    //  $client = new SOAPClient($api_url);
+
 
     $data_array = "apiLogin=$api_user&apiPassword=$api_passwd&meetingId=$seevogh->sv_meetingid&meetingPwd=$seevogh->sv_meetingpwd";
 
