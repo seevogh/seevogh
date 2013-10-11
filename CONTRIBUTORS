@@ -1,0 +1,18 @@
+
+	SeeVogh Moodle plugin developers and contributors
+	=================================================
+
+Developer and maintainer:
+------------------------
+Vladimir Litvine, Evogh, Inc., 2013, vladimir.litvine@evogh.com
+Contribution: plugin creation, API calls, DB implementation, form creation, 
+general view creation.
+
+
+Contributors:
+------------
+Justin Peterson, Research Computing, Rochester Institute of Technology, jmp3833@rit.edu
+Contributions: form field validations, form modification, and internationalization
+
+Gregory Denis, Evogh, Inc., 2013, gregory.denis@evogh.com
+Contributions: main page view design 
