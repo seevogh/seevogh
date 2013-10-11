@@ -6,7 +6,8 @@
  SeeVogh is cloud based videoconferencing solution that enables universities and 
 colleges to deliver a high-quality learning experience to remote students.
 
- These instructions describe how to install the seevogh Activity Module for Moodle 2.x.  
+ These instructions describe how to install the seevogh Activity Module for Moodle 2.4.x or
+higher.  
 This module is developed and supported by Evogh Inc, the company that manages the 
 SeeVogh Hybrid Cloud project in 2011.
 
@@ -22,7 +23,7 @@ With this plugin you can
 
 You need:
 
-        - A server running Moodle 2.4+
+        - A server running Moodle 2.4+ or higher
 	- USHI account on seevogh.com (please ask contact@evogh.com)
           This is not necessary in the beginning and we can use one of our 
           moodle test USHI accounts, but if you intend to use moodle plugin
